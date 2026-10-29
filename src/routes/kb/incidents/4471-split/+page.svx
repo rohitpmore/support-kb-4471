@@ -1,0 +1,67 @@
+---
+layout: runbook
+title: '#4471 split · three problems, not one'
+owner: support desk
+status: open
+reviewed: 2026-10-28
+signature: 'Rohit More (rohitpmore), with Claude Opus 5.5'
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) says one issue, one fix queued. Its reports say three. The desk merged
+them on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject)), and the same subject
+comes in for different bugs. Each problem now has its own ticket, with the reports it covers.
+
+<Callout kind="warn">
+The queued parser fix closes one of the three. The other two stay broken after it ships.
+</Callout>
+
+## The split
+
+<ProblemTable ticket={4471} issues={{
+  parser: 'https://github.com/rohitpmore/support-kb-4471/issues/1',
+  hint: 'https://github.com/rohitpmore/support-kb-4471/issues/2',
+  'one-day': 'https://github.com/rohitpmore/support-kb-4471/issues/3',
+}} />
+
+Each report is counted once (the export repeats some ids) and under one problem only.
+
+## `parser`: the shared parser reads day-first dates month first
+
+A tenant whose locale writes the day first (every tenant on file) sends a date like `07/04`, and the
+parser reads 4 July. The report shows a day/month swap: "Booked for 7 April. The invite says 4 July."
+It comes in through the app, by email and through booking-v2's form, whose hint says `DD/MM/YYYY`.
+This is the bug #4471 describes, and the fix that is queued.
+
+## `hint`: booking-v3's form tells day-first tenants to type month first
+
+booking-v3 prints `MM/DD/YYYY` under its date field. Day-first tenants on booking-v3 (Alder Physio,
+Copper Studio, Pale Harbour) follow the hint, type the month first, and the form reads the day first.
+The report looks like a parser swap, but only reports sent through that form have it. A parser fix
+does not touch it: the hint must match the tenant's locale, or the form must read what the hint asks for.
+
+## `one-day`: dates move by one day, not by a swap
+
+These reports describe a date one day off, or two places seeing two different days for the same
+booking: "Client in Lisbon got Tuesday. Client in Toronto got Monday." A day/month swap cannot do
+that. It points to a time-zone or daylight-saving bug in how invites are sent. The desk had already
+listed these reports as read differently (`desk-notes.json`), then counted them under `parser` by tenant.
+
+## How to tell them apart
+
+- Look the tenant up, not the reporter's browser. Intake's tag comes from the browser locale and is
+  wrong for many of these reports.
+- Booking-v3 tenant, sent through the form: `hint`. Any other day-first tenant: `parser`.
+- Read the body before you merge. A one-day move is `one-day`, whatever the tenant.
+
+## Lessons
+
+- A subject line names the symptom, not the cause. Merge on cause.
+- A footnote under the wrong row is still the wrong row. When the body disagrees with the tag, open a ticket.
+
+<RenderStamp {signature} />
