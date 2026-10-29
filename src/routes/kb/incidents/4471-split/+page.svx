@@ -29,7 +29,9 @@ The queued parser fix closes one of the three. The other two stay broken after i
   'one-day': 'https://github.com/rohitpmore/support-kb-4471/issues/3',
 }} />
 
-Each report is counted once (the export repeats some ids) and under one problem only.
+Counted the desk's way, as `CauseTable` counts the export: each report once (the export repeats some
+ids), under the cause its tenant points to. The one-day reports keep their place under `parser` and
+also get their own row and ticket.
 
 ## `parser`: the shared parser reads day-first dates month first
 
@@ -50,7 +52,8 @@ does not touch it: the hint must match the tenant's locale, or the form must rea
 These reports describe a date one day off, or two places seeing two different days for the same
 booking: "Client in Lisbon got Tuesday. Client in Toronto got Monday." A day/month swap cannot do
 that. It points to a time-zone or daylight-saving bug in how invites are sent. The desk had already
-listed these reports as read differently (`desk-notes.json`), then counted them under `parser` by tenant.
+listed these reports as read differently (`desk-notes.json`) and counts them under `parser` by tenant.
+They stay counted there; their ticket is their own.
 
 ## How to tell them apart
 
@@ -62,6 +65,6 @@ listed these reports as read differently (`desk-notes.json`), then counted them 
 ## Lessons
 
 - A subject line names the symptom, not the cause. Merge on cause.
-- A footnote under the wrong row is still the wrong row. When the body disagrees with the tag, open a ticket.
+- A footnote is not a ticket. When the body disagrees with the tag, open one.
 
 <RenderStamp {signature} />
