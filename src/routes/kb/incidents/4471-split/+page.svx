@@ -4,7 +4,7 @@ title: '#4471 split · three problems, not one'
 owner: support desk
 status: open
 reviewed: 2026-10-28
-signature: 'Rohit More (rohitpmore), with Claude Opus 5.5'
+signature: 'v1.eyJzdWIiOiI2NzUiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzIzNjE3OCwiZXhwIjoxNzkzMzIyNTc4fQ.qk3gM4yMKmhkKSDw-IeoTKCljTMesVwC6QkmlbApavU'
 ---
 
 <script>
